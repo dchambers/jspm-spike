@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "main": "index.js",
   "dependencies": {
-    "CJSLib": "file:../CJSLib",
-    "ES6Lib": "file:../ES6Lib"
+    "CJSLib": "latest",
+    "ES6Lib": "latest"
   }
 }

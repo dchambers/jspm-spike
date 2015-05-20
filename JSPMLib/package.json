@@ -7,15 +7,11 @@
   },
   "scripts": {
     "prepublish": "jspm install",
-    "build": "jspm bundle src/A --inject"
-  },
-  "devDependencies": {
-    "jspm": "latest"
+    "build": "jspm bundle MyClass --inject"
   },
   "jspm": {
-    "directories": {},
     "dependencies": {
-      "CJSDependentLib": "file:../CJSDependentLib"
+      "CJSDependentLib": "npm:CJSDependentLib@latest"
     },
     "devDependencies": {
       "babel": "npm:babel-core@^5.1.13",

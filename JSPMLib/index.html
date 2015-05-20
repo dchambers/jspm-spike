@@ -1,0 +1,11 @@
+<script src="jspm_packages/system.js"></script>
+<script src="config.js"></script>
+<script>
+debugger;
+	System.import('MyClass').then(function(module) {
+debugger;
+		var MyClass = module.default;
+		var myObj = new MyClass();
+		console.log(myObj.value());
+	});
+</script>
