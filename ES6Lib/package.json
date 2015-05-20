@@ -1,0 +1,14 @@
+{
+  "name": "ES6Lib",
+  "author": "Dominic Chambers",
+  "version": "0.0.0",
+  "main": "dist/index.js",
+  "scripts": {
+    "prepublish": "mkdirp dist && browserify index.js -t babelify --outfile dist/index.js"
+  },
+  "devDependencies": {
+    "browserify": "latest",
+    "babelify": "latest",
+    "mkdirp": "latest"
+  }
+}
