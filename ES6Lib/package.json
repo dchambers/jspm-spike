@@ -4,11 +4,10 @@
   "version": "0.0.0",
   "main": "dist/index.js",
   "scripts": {
-    "prepublish": "mkdirp dist && browserify index.js -t babelify --outfile dist/index.js"
+    "prepublish": "mkdirp dist && babel index.js --out-file dist/index.js"
   },
   "devDependencies": {
-    "browserify": "latest",
-    "babelify": "latest",
+    "babel": "latest",
     "mkdirp": "latest"
   }
 }
