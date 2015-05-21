@@ -6,6 +6,9 @@
   "scripts": {
     "prepublish": "mkdirp dist && babel index.js --out-file dist/index.js"
   },
+  "dependencies": {
+    "asap": "2.0.3"
+  },
   "devDependencies": {
     "babel": "latest",
     "mkdirp": "latest"

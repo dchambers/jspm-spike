@@ -2,5 +2,8 @@
   "name": "CJSLib",
   "author": "Dominic Chambers",
   "version": "0.0.0",
-  "main": "index.js"
+  "main": "index.js",
+  "dependencies": {
+    "asap": "^1.0.0"
+  }
 }
