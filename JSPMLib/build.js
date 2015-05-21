@@ -27,6 +27,67 @@ System.register("npm:babel-runtime@5.4.3/helpers/class-call-check", [], true, fu
   return module.exports;
 });
 
+System.register("npm:process@0.10.1/browser", [], true, function(require, exports, module) {
+  var global = System.global,
+      __define = global.define;
+  global.define = undefined;
+  var process = module.exports = {};
+  var queue = [];
+  var draining = false;
+  function drainQueue() {
+    if (draining) {
+      return ;
+    }
+    draining = true;
+    var currentQueue;
+    var len = queue.length;
+    while (len) {
+      currentQueue = queue;
+      queue = [];
+      var i = -1;
+      while (++i < len) {
+        currentQueue[i]();
+      }
+      len = queue.length;
+    }
+    draining = false;
+  }
+  process.nextTick = function(fun) {
+    queue.push(fun);
+    if (!draining) {
+      setTimeout(drainQueue, 0);
+    }
+  };
+  process.title = 'browser';
+  process.browser = true;
+  process.env = {};
+  process.argv = [];
+  process.version = '';
+  process.versions = {};
+  function noop() {}
+  process.on = noop;
+  process.addListener = noop;
+  process.once = noop;
+  process.off = noop;
+  process.removeListener = noop;
+  process.removeAllListeners = noop;
+  process.emit = noop;
+  process.binding = function(name) {
+    throw new Error('process.binding is not supported');
+  };
+  process.cwd = function() {
+    return '/';
+  };
+  process.chdir = function(dir) {
+    throw new Error('process.chdir is not supported');
+  };
+  process.umask = function() {
+    return 0;
+  };
+  global.define = __define;
+  return module.exports;
+});
+
 System.register("npm:CJSLib@0.0.0/src/inner", [], true, function(require, exports, module) {
   var global = System.global,
       __define = global.define;
@@ -35,6 +96,95 @@ System.register("npm:CJSLib@0.0.0/src/inner", [], true, function(require, export
   module.exports = function(str) {
     return "CJSLib/Inner::" + str;
   };
+  global.define = __define;
+  return module.exports;
+});
+
+System.register("npm:asap@1.0.0/asap", ["github:jspm/nodelibs-process@0.1.1"], true, function(require, exports, module) {
+  var global = System.global,
+      __define = global.define;
+  global.define = undefined;
+  (function(process) {
+    var head = {
+      task: void 0,
+      next: null
+    };
+    var tail = head;
+    var flushing = false;
+    var requestFlush = void 0;
+    var isNodeJS = false;
+    function flush() {
+      while (head.next) {
+        head = head.next;
+        var task = head.task;
+        head.task = void 0;
+        var domain = head.domain;
+        if (domain) {
+          head.domain = void 0;
+          domain.enter();
+        }
+        try {
+          task();
+        } catch (e) {
+          if (isNodeJS) {
+            if (domain) {
+              domain.exit();
+            }
+            setTimeout(flush, 0);
+            if (domain) {
+              domain.enter();
+            }
+            throw e;
+          } else {
+            setTimeout(function() {
+              throw e;
+            }, 0);
+          }
+        }
+        if (domain) {
+          domain.exit();
+        }
+      }
+      flushing = false;
+    }
+    if (typeof process !== "undefined" && process.nextTick) {
+      isNodeJS = true;
+      requestFlush = function() {
+        process.nextTick(flush);
+      };
+    } else if (typeof setImmediate === "function") {
+      if (typeof window !== "undefined") {
+        requestFlush = setImmediate.bind(window, flush);
+      } else {
+        requestFlush = function() {
+          setImmediate(flush);
+        };
+      }
+    } else if (typeof MessageChannel !== "undefined") {
+      var channel = new MessageChannel();
+      channel.port1.onmessage = flush;
+      requestFlush = function() {
+        channel.port2.postMessage(0);
+      };
+    } else {
+      requestFlush = function() {
+        setTimeout(flush, 0);
+      };
+    }
+    function asap(task) {
+      tail = tail.next = {
+        task: task,
+        domain: isNodeJS && process.domain,
+        next: null
+      };
+      if (!flushing) {
+        flushing = true;
+        requestFlush();
+      }
+    }
+    ;
+    module.exports = asap;
+  })(require("github:jspm/nodelibs-process@0.1.1"));
   global.define = __define;
   return module.exports;
 });
@@ -156,15 +306,20 @@ System.register("npm:core-js@0.9.11/library/modules/$", ["npm:core-js@0.9.11/lib
   return module.exports;
 });
 
-System.register("npm:CJSLib@0.0.0/index", ["npm:CJSLib@0.0.0/src/inner"], true, function(require, exports, module) {
+System.register("npm:process@0.10.1", ["npm:process@0.10.1/browser"], true, function(require, exports, module) {
   var global = System.global,
       __define = global.define;
   global.define = undefined;
-  'use strict';
-  var inner = require("npm:CJSLib@0.0.0/src/inner");
-  module.exports = function(str) {
-    return "CJSLib::" + inner(str);
-  };
+  module.exports = require("npm:process@0.10.1/browser");
+  global.define = __define;
+  return module.exports;
+});
+
+System.register("npm:asap@1.0.0", ["npm:asap@1.0.0/asap"], true, function(require, exports, module) {
+  var global = System.global,
+      __define = global.define;
+  global.define = undefined;
+  module.exports = require("npm:asap@1.0.0/asap");
   global.define = __define;
   return module.exports;
 });
@@ -190,11 +345,25 @@ System.register("npm:core-js@0.9.11/library/fn/object/define-property", ["npm:co
   return module.exports;
 });
 
-System.register("npm:CJSLib@0.0.0", ["npm:CJSLib@0.0.0/index"], true, function(require, exports, module) {
+System.register("github:jspm/nodelibs-process@0.1.1/index", ["npm:process@0.10.1"], true, function(require, exports, module) {
   var global = System.global,
       __define = global.define;
   global.define = undefined;
-  module.exports = require("npm:CJSLib@0.0.0/index");
+  module.exports = System._nodeRequire ? process : require("npm:process@0.10.1");
+  global.define = __define;
+  return module.exports;
+});
+
+System.register("npm:CJSLib@0.0.0/index", ["npm:CJSLib@0.0.0/src/inner", "npm:asap@1.0.0"], true, function(require, exports, module) {
+  var global = System.global,
+      __define = global.define;
+  global.define = undefined;
+  'use strict';
+  var inner = require("npm:CJSLib@0.0.0/src/inner");
+  var asap = require("npm:asap@1.0.0");
+  module.exports = function(str) {
+    return "CJSLib::" + inner(str);
+  };
   global.define = __define;
   return module.exports;
 });
@@ -211,16 +380,20 @@ System.register("npm:babel-runtime@5.4.3/core-js/object/define-property", ["npm:
   return module.exports;
 });
 
-System.register("npm:CJSDependentLib@0.0.0/index", ["npm:CJSLib@0.0.0", "npm:ES6Lib@0.0.0"], true, function(require, exports, module) {
+System.register("github:jspm/nodelibs-process@0.1.1", ["github:jspm/nodelibs-process@0.1.1/index"], true, function(require, exports, module) {
   var global = System.global,
       __define = global.define;
   global.define = undefined;
-  'use strict';
-  var cjs = require("npm:CJSLib@0.0.0");
-  var es6 = require("npm:ES6Lib@0.0.0");
-  module.exports = function(str) {
-    return "CJSDepenentLib::" + cjs(es6(str));
-  };
+  module.exports = require("github:jspm/nodelibs-process@0.1.1/index");
+  global.define = __define;
+  return module.exports;
+});
+
+System.register("npm:CJSLib@0.0.0", ["npm:CJSLib@0.0.0/index"], true, function(require, exports, module) {
+  var global = System.global,
+      __define = global.define;
+  global.define = undefined;
+  module.exports = require("npm:CJSLib@0.0.0/index");
   global.define = __define;
   return module.exports;
 });
@@ -251,6 +424,150 @@ System.register("npm:babel-runtime@5.4.3/helpers/create-class", ["npm:babel-runt
     };
   })();
   exports.__esModule = true;
+  global.define = __define;
+  return module.exports;
+});
+
+System.register("npm:asap@2.0.3/browser-raw", ["github:jspm/nodelibs-process@0.1.1"], true, function(require, exports, module) {
+  var global = System.global,
+      __define = global.define;
+  global.define = undefined;
+  (function(process) {
+    "use strict";
+    module.exports = rawAsap;
+    function rawAsap(task) {
+      if (!queue.length) {
+        requestFlush();
+        flushing = true;
+      }
+      queue[queue.length] = task;
+    }
+    var queue = [];
+    var flushing = false;
+    var requestFlush;
+    var index = 0;
+    var capacity = 1024;
+    function flush() {
+      while (index < queue.length) {
+        var currentIndex = index;
+        index = index + 1;
+        queue[currentIndex].call();
+        if (index > capacity) {
+          for (var scan = 0,
+              newLength = queue.length - index; scan < newLength; scan++) {
+            queue[scan] = queue[scan + index];
+          }
+          queue.length -= index;
+          index = 0;
+        }
+      }
+      queue.length = 0;
+      index = 0;
+      flushing = false;
+    }
+    var BrowserMutationObserver = global.MutationObserver || global.WebKitMutationObserver;
+    if (typeof BrowserMutationObserver === "function") {
+      requestFlush = makeRequestCallFromMutationObserver(flush);
+    } else {
+      requestFlush = makeRequestCallFromTimer(flush);
+    }
+    rawAsap.requestFlush = requestFlush;
+    function makeRequestCallFromMutationObserver(callback) {
+      var toggle = 1;
+      var observer = new BrowserMutationObserver(callback);
+      var node = document.createTextNode("");
+      observer.observe(node, {characterData: true});
+      return function requestCall() {
+        toggle = -toggle;
+        node.data = toggle;
+      };
+    }
+    function makeRequestCallFromTimer(callback) {
+      return function requestCall() {
+        var timeoutHandle = setTimeout(handleTimer, 0);
+        var intervalHandle = setInterval(handleTimer, 50);
+        function handleTimer() {
+          clearTimeout(timeoutHandle);
+          clearInterval(intervalHandle);
+          callback();
+        }
+      };
+    }
+    rawAsap.makeRequestCallFromTimer = makeRequestCallFromTimer;
+  })(require("github:jspm/nodelibs-process@0.1.1"));
+  global.define = __define;
+  return module.exports;
+});
+
+System.register("npm:asap@2.0.3/asap", ["npm:asap@2.0.3/browser-raw", "github:jspm/nodelibs-process@0.1.1"], true, function(require, exports, module) {
+  var global = System.global,
+      __define = global.define;
+  global.define = undefined;
+  (function(process) {
+    "use strict";
+    var rawAsap = require("npm:asap@2.0.3/browser-raw");
+    var freeTasks = [];
+    module.exports = asap;
+    function asap(task) {
+      var rawTask;
+      if (freeTasks.length) {
+        rawTask = freeTasks.pop();
+      } else {
+        rawTask = new RawTask();
+      }
+      rawTask.task = task;
+      rawTask.domain = process.domain;
+      rawAsap(rawTask);
+    }
+    function RawTask() {
+      this.task = null;
+      this.domain = null;
+    }
+    RawTask.prototype.call = function() {
+      if (this.domain) {
+        this.domain.enter();
+      }
+      var threw = true;
+      try {
+        this.task.call();
+        threw = false;
+        if (this.domain) {
+          this.domain.exit();
+        }
+      } finally {
+        if (threw) {
+          rawAsap.requestFlush();
+        }
+        this.task = null;
+        this.domain = null;
+        freeTasks.push(this);
+      }
+    };
+  })(require("github:jspm/nodelibs-process@0.1.1"));
+  global.define = __define;
+  return module.exports;
+});
+
+System.register("npm:asap@2.0.3", ["npm:asap@2.0.3/asap"], true, function(require, exports, module) {
+  var global = System.global,
+      __define = global.define;
+  global.define = undefined;
+  module.exports = require("npm:asap@2.0.3/asap");
+  global.define = __define;
+  return module.exports;
+});
+
+System.register("npm:CJSDependentLib@0.0.0/index", ["npm:asap@2.0.3", "npm:CJSLib@0.0.0", "npm:ES6Lib@0.0.0"], true, function(require, exports, module) {
+  var global = System.global,
+      __define = global.define;
+  global.define = undefined;
+  'use strict';
+  var asap = require("npm:asap@2.0.3");
+  var cjs = require("npm:CJSLib@0.0.0");
+  var es6 = require("npm:ES6Lib@0.0.0");
+  module.exports = function(str) {
+    return "CJSDepenentLib::" + cjs(es6(str));
+  };
   global.define = __define;
   return module.exports;
 });
