@@ -189,20 +189,6 @@ System.register("npm:asap@1.0.0/asap", ["github:jspm/nodelibs-process@0.1.1"], t
   return module.exports;
 });
 
-System.register("npm:ES6Lib@0.0.0/dist/index", [], true, function(require, exports, module) {
-  var global = System.global,
-      __define = global.define;
-  global.define = undefined;
-  "use strict";
-  Object.defineProperty(exports, "__esModule", {value: true});
-  exports["default"] = function(str) {
-    return "ES6Lib::" + str;
-  };
-  module.exports = exports["default"];
-  global.define = __define;
-  return module.exports;
-});
-
 System.register("npm:core-js@0.9.11/library/modules/$", ["npm:core-js@0.9.11/library/modules/$.fw"], true, function(require, exports, module) {
   var global = System.global,
       __define = global.define;
@@ -320,15 +306,6 @@ System.register("npm:asap@1.0.0", ["npm:asap@1.0.0/asap"], true, function(requir
       __define = global.define;
   global.define = undefined;
   module.exports = require("npm:asap@1.0.0/asap");
-  global.define = __define;
-  return module.exports;
-});
-
-System.register("npm:ES6Lib@0.0.0", ["npm:ES6Lib@0.0.0/dist/index"], true, function(require, exports, module) {
-  var global = System.global,
-      __define = global.define;
-  global.define = undefined;
-  module.exports = require("npm:ES6Lib@0.0.0/dist/index");
   global.define = __define;
   return module.exports;
 });
@@ -564,7 +541,7 @@ System.register("npm:CJSDependentLib@0.0.0/index", ["npm:asap@2.0.3", "npm:CJSLi
   'use strict';
   var asap = require("npm:asap@2.0.3");
   var cjs = require("npm:CJSLib@0.0.0");
-  var es6 = require("npm:ES6Lib@0.0.0");
+  var es6 = require("npm:ES6Lib@0.0.0").default;
   module.exports = function(str) {
     return "CJSDepenentLib::" + cjs(es6(str));
   };
@@ -581,6 +558,34 @@ System.register("npm:CJSDependentLib@0.0.0", ["npm:CJSDependentLib@0.0.0/index"]
   return module.exports;
 });
 
+System.register('npm:ES6Lib@0.0.0/index', ['npm:asap@2.0.3'], function (_export) {
+	/* */
+	'use strict';
+
+	var asap;
+	return {
+		setters: [function (_npmAsap203) {
+			asap = _npmAsap203['default'];
+		}],
+		execute: function () {
+			_export('default', function (str) {
+				return 'ES6Lib::' + str;
+			});
+		}
+	};
+});
+System.register("npm:ES6Lib@0.0.0", ["npm:ES6Lib@0.0.0/index"], function (_export) {
+  "use strict";
+
+  return {
+    setters: [function (_npmES6Lib000Index) {
+      for (var _key in _npmES6Lib000Index) {
+        _export(_key, _npmES6Lib000Index[_key]);
+      }
+    }],
+    execute: function () {}
+  };
+});
 System.register('MyClass', ['npm:babel-runtime@5.4.3/helpers/create-class', 'npm:babel-runtime@5.4.3/helpers/class-call-check', 'npm:CJSDependentLib@0.0.0'], function (_export) {
 	var _createClass, _classCallCheck, cjsdep, MyClass;
 

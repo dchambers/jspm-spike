@@ -18,7 +18,7 @@ System.config({
       "npm:process@0.10.1/browser",
       "npm:CJSLib@0.0.0/src/inner",
       "npm:asap@1.0.0/asap",
-      "npm:ES6Lib@0.0.0/dist/index",
+      "npm:ES6Lib@0.0.0/index",
       "npm:core-js@0.9.11/library/modules/$",
       "npm:process@0.10.1",
       "npm:asap@1.0.0",
