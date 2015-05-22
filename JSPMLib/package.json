@@ -11,7 +11,8 @@
   },
   "jspm": {
     "dependencies": {
-      "CJSDependentLib": "npm:CJSDependentLib@latest"
+      "CJSDependentLib": "npm:CJSDependentLib@latest",
+      "ES6CSSLib": "npm:ES6CSSLib@latest"
     },
     "devDependencies": {
       "babel": "npm:babel-core@^5.1.13",

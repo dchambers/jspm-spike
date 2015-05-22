@@ -1,4 +1,5 @@
 "format register";
+
 System.register("npm:core-js@0.9.11/library/modules/$.fw", [], true, function(require, exports, module) {
   var global = System.global,
       __define = global.define;
@@ -12,7 +13,7 @@ System.register("npm:core-js@0.9.11/library/modules/$.fw", [], true, function(re
   return module.exports;
 });
 
-System.register("npm:babel-runtime@5.4.3/helpers/class-call-check", [], true, function(require, exports, module) {
+System.register("npm:babel-runtime@5.4.7/helpers/class-call-check", [], true, function(require, exports, module) {
   var global = System.global,
       __define = global.define;
   global.define = undefined;
@@ -345,7 +346,7 @@ System.register("npm:CJSLib@0.0.0/index", ["npm:CJSLib@0.0.0/src/inner", "npm:as
   return module.exports;
 });
 
-System.register("npm:babel-runtime@5.4.3/core-js/object/define-property", ["npm:core-js@0.9.11/library/fn/object/define-property"], true, function(require, exports, module) {
+System.register("npm:babel-runtime@5.4.7/core-js/object/define-property", ["npm:core-js@0.9.11/library/fn/object/define-property"], true, function(require, exports, module) {
   var global = System.global,
       __define = global.define;
   global.define = undefined;
@@ -375,12 +376,12 @@ System.register("npm:CJSLib@0.0.0", ["npm:CJSLib@0.0.0/index"], true, function(r
   return module.exports;
 });
 
-System.register("npm:babel-runtime@5.4.3/helpers/create-class", ["npm:babel-runtime@5.4.3/core-js/object/define-property"], true, function(require, exports, module) {
+System.register("npm:babel-runtime@5.4.7/helpers/create-class", ["npm:babel-runtime@5.4.7/core-js/object/define-property"], true, function(require, exports, module) {
   var global = System.global,
       __define = global.define;
   global.define = undefined;
   "use strict";
-  var _Object$defineProperty = require("npm:babel-runtime@5.4.3/core-js/object/define-property")["default"];
+  var _Object$defineProperty = require("npm:babel-runtime@5.4.7/core-js/object/define-property")["default"];
   exports["default"] = (function() {
     function defineProperties(target, props) {
       for (var i = 0; i < props.length; i++) {
@@ -586,16 +587,43 @@ System.register("npm:ES6Lib@0.0.0", ["npm:ES6Lib@0.0.0/index"], function (_expor
     execute: function () {}
   };
 });
-System.register('MyClass', ['npm:babel-runtime@5.4.3/helpers/create-class', 'npm:babel-runtime@5.4.3/helpers/class-call-check', 'npm:CJSDependentLib@0.0.0'], function (_export) {
-	var _createClass, _classCallCheck, cjsdep, MyClass;
+System.register('npm:ES6CSSLib@0.0.0/index', ['npm:ES6CSSLib@0.0.0/style.css!github:systemjs/plugin-css@0.1.11'], function (_export) {
+	/* */
+	'use strict';
 
 	return {
-		setters: [function (_npmBabelRuntime543HelpersCreateClass) {
-			_createClass = _npmBabelRuntime543HelpersCreateClass['default'];
-		}, function (_npmBabelRuntime543HelpersClassCallCheck) {
-			_classCallCheck = _npmBabelRuntime543HelpersClassCallCheck['default'];
+		setters: [function (_npmES6CSSLib000StyleCssGithubSystemjsPluginCss0111) {}],
+		execute: function () {
+			_export('default', function (str) {
+				return 'ES6CSSLib::' + str;
+			});
+		}
+	};
+});
+System.register("npm:ES6CSSLib@0.0.0", ["npm:ES6CSSLib@0.0.0/index"], function (_export) {
+  "use strict";
+
+  return {
+    setters: [function (_npmES6CSSLib000Index) {
+      for (var _key in _npmES6CSSLib000Index) {
+        _export(_key, _npmES6CSSLib000Index[_key]);
+      }
+    }],
+    execute: function () {}
+  };
+});
+System.register('MyClass', ['npm:babel-runtime@5.4.7/helpers/create-class', 'npm:babel-runtime@5.4.7/helpers/class-call-check', 'npm:CJSDependentLib@0.0.0', 'npm:ES6CSSLib@0.0.0'], function (_export) {
+	var _createClass, _classCallCheck, cjsdep, es6cssdep, MyClass;
+
+	return {
+		setters: [function (_npmBabelRuntime547HelpersCreateClass) {
+			_createClass = _npmBabelRuntime547HelpersCreateClass['default'];
+		}, function (_npmBabelRuntime547HelpersClassCallCheck) {
+			_classCallCheck = _npmBabelRuntime547HelpersClassCallCheck['default'];
 		}, function (_npmCJSDependentLib000) {
 			cjsdep = _npmCJSDependentLib000['default'];
+		}, function (_npmES6CSSLib000) {
+			es6cssdep = _npmES6CSSLib000['default'];
 		}],
 		execute: function () {
 			'use strict';
@@ -608,7 +636,7 @@ System.register('MyClass', ['npm:babel-runtime@5.4.3/helpers/create-class', 'npm
 				_createClass(MyClass, [{
 					key: 'value',
 					value: function value() {
-						return cjsdep('Hello');
+						return es6cssdep(cjsdep('Hello'));
 					}
 				}]);
 
@@ -619,4 +647,7 @@ System.register('MyClass', ['npm:babel-runtime@5.4.3/helpers/create-class', 'npm
 		}
 	};
 });
+System.register('npm:ES6CSSLib@0.0.0/style.css!github:systemjs/plugin-css@0.1.11', [], false, function() {});
+(function(c){var d=document,a='appendChild',i='styleSheet',s=d.createElement('style');s.type='text/css';d.getElementsByTagName('head')[0][a](s);s[i]?s[i].cssText=c:s[a](d.createTextNode(c));})
+("body{color:red}");
 //# sourceMappingURL=build.js.map
