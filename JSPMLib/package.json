@@ -1,6 +1,6 @@
 {
-  "name": "jspm-spike",
   "author": "Dominic Chambers",
+  "name": "jspm-spike",
   "version": "0.0.0",
   "devDependencies": {
     "jspm": "latest"

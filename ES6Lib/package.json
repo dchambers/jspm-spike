@@ -1,7 +1,8 @@
 {
-  "name": "ES6Lib",
   "author": "Dominic Chambers",
+  "name": "ES6Lib",
   "version": "0.0.0",
+  "registry": "npm",
   "main": "dist/index.js",
   "scripts": {
     "prepublish": "mkdirp dist && babel index.js --out-file dist/index.js"
