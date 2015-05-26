@@ -5,9 +5,7 @@
   "registry": "npm",
   "format": "es6",
   "main": "index.js",
-  "jspm": {
-    "dependencies": {
-      "css": "github:systemjs/plugin-css@^0.1.11"
-    }
+  "dependencies": {
+    "system-css": "latest"
   }
 }
